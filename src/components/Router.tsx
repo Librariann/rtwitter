@@ -7,16 +7,17 @@ import Navigation from 'components/Navigation';
 
 interface IProps {
   isLoggedIn: boolean;
+  userObjUid: string;
 }
 
-function RootRouter({ isLoggedIn }: IProps) {
+function RootRouter({ isLoggedIn, userObjUid }: IProps) {
   return (
     <>
       {isLoggedIn && <Navigation />}
       {isLoggedIn ? (
         <div>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home userObjUid={userObjUid} />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </div>
