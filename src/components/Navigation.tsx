@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Navigation() {
+interface IProps {
+  userObj: any;
+}
+
+function Navigation({ userObj }: IProps) {
   return (
     <nav>
       <ul>
@@ -9,7 +13,7 @@ function Navigation() {
           <Link to="/">Home</Link>
         </li>
         <li>
-          <Link to="/profile">My Profile</Link>
+          <Link to="/profile">{`${userObj.displayName}의`} Profile</Link>
         </li>
       </ul>
     </nav>

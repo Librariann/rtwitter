@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { dbService } from 'fbase';
+import { dbService, storageService } from 'fbase';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { deleteObject, ref } from 'firebase/storage';
 
 function Rwit({ rwitObj, isOwner }: any) {
   const [editing, setEditing] = useState(false);
@@ -11,6 +12,7 @@ function Rwit({ rwitObj, isOwner }: any) {
     const ok = window.confirm('Are you sure delete this rwit?');
     if (ok === true) {
       await deleteDoc(RwitTextRef);
+      await deleteObject(ref(storageService, rwitObj.attachmentUrl));
     }
   };
 
@@ -50,6 +52,14 @@ function Rwit({ rwitObj, isOwner }: any) {
       ) : (
         <>
           <h4>{rwitObj.text}</h4>
+          {rwitObj.attachmentUrl && (
+            <img
+              src={rwitObj.attachmentUrl}
+              width="10%"
+              height="10%"
+              alt="url"
+            />
+          )}
           {isOwner && (
             <>
               <button type="button" onClick={onDeleteClick}>

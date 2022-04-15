@@ -1,5 +1,41 @@
 import { authService, authCheck } from 'fbase';
 import React, { useState } from 'react';
+import styled from 'styled-components';
+
+const Form = styled.form`
+  width: 100%;
+`;
+
+const Div = styled.div`
+  width: 100%;
+  margin: 0 auto;
+  line-height: 1.5;
+`;
+
+const Input = styled.input`
+  border: 1px solid #fff;
+  display: block;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+`;
+
+const InputSubmit = styled.input`
+  margin-top: 10px;
+  padding: 3px 40px 3px 40px;
+  border-radius: 10px;
+  display: block;
+  text-align: center;
+  background-color: green;
+`;
+
+const ButtonToggleAccount = styled.button`
+  border: 1px solid #fff;
+  outline: none;
+  background-color: transparent;
+  color: white;
+`;
 
 function Auth() {
   const [email, setEmail] = useState('');
@@ -19,13 +55,19 @@ function Auth() {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      let data;
       if (newAccount) {
-        data = await authCheck.createUserWithEmailAndPassword(authService, email, password);
+        await authCheck.createUserWithEmailAndPassword(
+          authService,
+          email,
+          password,
+        );
       } else {
-        data = await authCheck.signInWithEmailAndPassword(authService, email, password);
+        await authCheck.signInWithEmailAndPassword(
+          authService,
+          email,
+          password,
+        );
       }
-      console.log(data);
     } catch (e) {
       const result = (e as Error).message;
       setError(result);
@@ -44,20 +86,36 @@ function Auth() {
     } else if (name === 'github') {
       provider = new authCheck.GithubAuthProvider();
     }
-    const data = await authCheck.signInWithPopup(authService, provider);
-    console.log(data);
+    await authCheck.signInWithPopup(authService, provider);
   };
   return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <input type="email" name="email" placeholder="Email" required value={email} onChange={onChange} />
-        <input type="password" name="password" placeholder="Password" required value={password} onChange={onChange} />
-        <input type="submit" value={newAccount ? 'Create Account' : 'Sign In'} />
+    <Div>
+      <Form onSubmit={onSubmit}>
+        <Input
+          type="email"
+          name="email"
+          placeholder="Email"
+          required
+          value={email}
+          onChange={onChange}
+        />
+        <Input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+          value={password}
+          onChange={onChange}
+        />
+        <InputSubmit
+          type="submit"
+          value={newAccount ? 'Create Account' : 'Sign In'}
+        />
         {error}
-      </form>
-      <button type="button" onClick={toggleAccount}>
+      </Form>
+      <ButtonToggleAccount type="button" onClick={toggleAccount}>
         {newAccount ? 'Sign In' : 'Create Account'}
-      </button>
+      </ButtonToggleAccount>
       <div>
         <button type="button" name="google" onClick={onSocialClick}>
           Continue with Google
@@ -66,7 +124,7 @@ function Auth() {
           Continue with Github
         </button>
       </div>
-    </div>
+    </Div>
   );
 }
 

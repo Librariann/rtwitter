@@ -12,17 +12,11 @@ import { ref, uploadString, getDownloadURL } from '@firebase/storage';
 import { v4 } from 'uuid';
 import React, { useEffect, useRef, useState } from 'react';
 
-interface ISnapshotData {
-  rwit: string;
-  createAt: Date;
-  id: string;
-}
-
 interface IProps {
-  userObjUid: string;
+  userObj: any;
 }
 
-function Home({ userObjUid }: IProps) {
+function Home({ userObj }: IProps) {
   const [rwit, setRwit] = useState('');
   const [rwits, setRwits] = useState([]);
   const [attachment, setAttachment] = useState(null);
@@ -30,7 +24,7 @@ function Home({ userObjUid }: IProps) {
   useEffect(() => {
     const q = query(
       collection(dbService, 'rwits'),
-      orderBy('createAt', 'desc'),
+      orderBy('createdAt', 'desc'),
     );
     onSnapshot(q, (snapshot) => {
       const rwitArr = snapshot.docs.map((doc) => ({
@@ -43,23 +37,25 @@ function Home({ userObjUid }: IProps) {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let attachmentUrl = '';
-    const attachmentRefRef = ref(storageService, `${userObjUid}/${v4()}`);
-    const response = await uploadString(
-      attachmentRefRef,
-      attachment,
-      'data_url',
-    );
-    attachmentUrl = await getDownloadURL(response.ref);
+    if (attachment !== null) {
+      const attachmentRefRef = ref(storageService, `${userObj.uid}/${v4()}`);
+      const response = await uploadString(
+        attachmentRefRef,
+        attachment,
+        'data_url',
+      );
+      attachmentUrl = await getDownloadURL(response.ref);
+    }
     const rwitObj = {
       text: rwit,
       createdAt: Date.now(),
-      creatorId: userObjUid,
+      creatorId: userObj.uid,
       attachmentUrl,
     };
-    console.log(attachmentUrl);
-    console.log(response.ref.fullPath);
     await addDoc(collection(dbService, 'rwits'), rwitObj);
     setRwit('');
+    setAttachment(null);
+    inputRef.current.value = '';
   };
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -112,7 +108,7 @@ function Home({ userObjUid }: IProps) {
           <Rwit
             key={item.id}
             rwitObj={item}
-            isOwner={item.creatorId === userObjUid}
+            isOwner={item.creatorId === userObj.uid}
           />
         ))}
       </div>

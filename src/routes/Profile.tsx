@@ -1,19 +1,63 @@
-import React from 'react';
-import { authService } from 'fbase';
+import React, { useEffect, useState } from 'react';
+import { authService, dbService } from 'fbase';
 import { useNavigate } from 'react-router-dom';
+import { collection, getDocs, query } from '@firebase/firestore';
+import { orderBy, where } from 'firebase/firestore';
+import { updateProfile } from 'firebase/auth';
 
-function Profile() {
+interface IProps {
+  userObj: any;
+  refreshUser: () => void;
+}
+
+function Profile({ userObj, refreshUser }: IProps) {
+  const [newDisplayName, setNewDisplayName] = useState('');
   const navigate = useNavigate();
   const onLogOutClick = () => {
     authService.signOut();
     navigate('/');
   };
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    setNewDisplayName(value);
+  };
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (userObj.displayName !== newDisplayName) {
+      await updateProfile(authService.currentUser, {
+        displayName: newDisplayName,
+      });
+      refreshUser();
+    }
+  };
+  const getMyRwits = async () => {
+    const rwits = query(
+      collection(dbService, 'rwits'),
+      where('creatorId', '==', `${userObj.uid}`),
+      orderBy('createdAt', 'desc'),
+    );
+    await getDocs(rwits);
+  };
+  useEffect(() => {
+    getMyRwits();
+  }, []);
   return (
     <>
+      <form onSubmit={onSubmit}>
+        <input
+          onChange={onChange}
+          type="text"
+          placeholder="Display name"
+          value={newDisplayName}
+        />
+        <input type="submit" value="Update Profile" />
+      </form>
       <button type="button" onClick={onLogOutClick}>
         로그아웃!
       </button>
-      <div>Profile</div>
+      <div>{`${userObj.displayName}의`}Profile</div>
     </>
   );
 }
