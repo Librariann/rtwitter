@@ -4,14 +4,15 @@ import Profile from 'routes/Profile';
 import Auth from 'routes/Auth';
 import Home from 'routes/Home';
 import Navigation from 'components/Navigation';
+import { IProps } from 'interface/common';
 
-interface IProps {
+interface IPropsRouter {
   isLoggedIn: boolean;
-  userObj: any;
+  userObj: IProps;
   refreshUser: () => void;
 }
 
-function RootRouter({ isLoggedIn, userObj, refreshUser }: IProps) {
+function RootRouter({ isLoggedIn, userObj, refreshUser }: IPropsRouter) {
   return (
     <>
       {isLoggedIn && <Navigation userObj={userObj} />}

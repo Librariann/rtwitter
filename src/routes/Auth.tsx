@@ -6,11 +6,7 @@ const Form = styled.form`
   width: 100%;
 `;
 
-const Div = styled.div`
-  width: 100%;
-  margin: 0 auto;
-  line-height: 1.5;
-`;
+const Div = styled.div``;
 
 const Input = styled.input`
   border: 1px solid #fff;

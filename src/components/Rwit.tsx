@@ -3,7 +3,17 @@ import { dbService, storageService } from 'fbase';
 import { doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { deleteObject, ref } from 'firebase/storage';
 
-function Rwit({ rwitObj, isOwner }: any) {
+interface IProps {
+  rwitObj: {
+    text: string;
+    id: string;
+    attachmentUrl: string;
+    createdAt: Date;
+  };
+  isOwner: boolean;
+}
+
+function Rwit({ rwitObj, isOwner }: IProps) {
   const [editing, setEditing] = useState(false);
   const [newRwit, setNewRwit] = useState(rwitObj.text);
   const RwitTextRef = doc(dbService, 'rwits', `${rwitObj.id}`);

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { IProps } from 'interface/common';
 
-interface IProps {
-  userObj: any;
+interface IPropsObj {
+  userObj: IProps;
 }
 
-function Navigation({ userObj }: IProps) {
+function Navigation({ userObj }: IPropsObj) {
   return (
     <nav>
       <ul>

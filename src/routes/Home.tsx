@@ -3,7 +3,6 @@ import { dbService, storageService } from 'fbase';
 import {
   addDoc,
   collection,
-  getDocs,
   onSnapshot,
   orderBy,
   query,
@@ -11,12 +10,14 @@ import {
 import { ref, uploadString, getDownloadURL } from '@firebase/storage';
 import { v4 } from 'uuid';
 import React, { useEffect, useRef, useState } from 'react';
+import { IProps } from 'interface/common';
 
-interface IProps {
-  userObj: any;
+interface IPropsObj {
+  userObj: IProps;
 }
 
-function Home({ userObj }: IProps) {
+function Home({ userObj }: IPropsObj) {
+  console.log(userObj);
   const [rwit, setRwit] = useState('');
   const [rwits, setRwits] = useState([]);
   const [attachment, setAttachment] = useState(null);

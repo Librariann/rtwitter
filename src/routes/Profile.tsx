@@ -4,13 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, query } from '@firebase/firestore';
 import { orderBy, where } from 'firebase/firestore';
 import { updateProfile } from 'firebase/auth';
+import { IProps } from 'interface/common';
 
-interface IProps {
-  userObj: any;
+interface IPropsObj {
+  userObj: IProps;
   refreshUser: () => void;
 }
 
-function Profile({ userObj, refreshUser }: IProps) {
+function Profile({ userObj, refreshUser }: IPropsObj) {
   const [newDisplayName, setNewDisplayName] = useState('');
   const navigate = useNavigate();
   const onLogOutClick = () => {

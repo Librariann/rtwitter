@@ -3,18 +3,17 @@ import RootRouter from 'components/Router';
 import { authService } from 'fbase';
 import { updateProfile } from 'firebase/auth';
 import styled from 'styled-components';
+import { IProps } from 'interface/common';
 
 const Container = styled.div`
   width: 100%;
-  display: block;
-  margin: 0 auto;
   margin-top: 50px;
 `;
 
 function App() {
   const [init, setInit] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userObj, setUserObj] = useState(null);
+  const [userObj, setUserObj] = useState<IProps>(null);
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       if (user) {
