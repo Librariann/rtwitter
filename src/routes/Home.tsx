@@ -17,7 +17,6 @@ interface IPropsObj {
 }
 
 function Home({ userObj }: IPropsObj) {
-  console.log(userObj);
   const [rwit, setRwit] = useState('');
   const [rwits, setRwits] = useState([]);
   const [attachment, setAttachment] = useState(null);
